@@ -23,19 +23,57 @@ servers:
 paths:
   /login:
     post:
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Authenticated
+          content:
+            application/json:
+              schema:
+                properties:
+                  X-API-Key: 
+                    type: string
+                
+        '401':
+          description: Incorrect username or password
 
   /flog:
-    summary: Get all flog objects
     get:
+      summary: Get all flog objects
+      security: []
       responses: 
         '200':
           description: OK
+    post:
+      security: 
+        - ApiKeyAuth: []
+      summary: Add a new flog object
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Flog'
+      responses:
+        '201':
+          description: Created
 
   /flog/{id}:
     get:
       tags:
         - Flogs
       summary: Gets a flog by ID.
+      security: []
       operationId: get_flog_by_id
       parameters:
         - name: id
@@ -52,13 +90,200 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Flog'
-      externalDocs:
-        description: Learn more about user operations provided by this API.
-        url: http://api.example.com/docs/user-operations/
+    put:
+      summary: Update a flog object
+      security: 
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Flog ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Flog'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete a flog object
+      security: 
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Flog ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Deleted flog
 
   /author:
+    get:
+      summary: Get all author objects
+      security: 
+        - ApiKeyAuth: []
+      responses: 
+        '200':
+          description: OK
+    post:
+      summary: Add a new author object
+      security: 
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Author'
+      responses:
+        '201':
+          description: Created
 
+  /author/{id}:
+    get:
+      tags:
+        - Author
+      summary: Gets an author by ID.
+      operationId: get_author_by_id
+      parameters:
+        - name: id
+          in: path
+          description: Author ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+    put:
+      summary: Update an author object
+      security: 
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Author ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Author'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete an author object
+      security: 
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Author ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Deleted author
   /post:
+    get:
+      summary: Get all post objects
+      responses: 
+        '200':
+          description: OK
+    post:
+      summary: Add a new post object
+      security: 
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        '201':
+          description: Created
+
+  /post/{id}:
+    get:
+      tags:
+        - Post
+      summary: Gets an post by ID.
+      operationId: get_post_by_id
+      parameters:
+        - name: id
+          in: path
+          description: Post ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+    put:
+      summary: Update a post object
+      security: 
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Post ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete a post object
+      security: 
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Post ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Deleted author
+
 
 components:
   schemas:
@@ -118,6 +343,8 @@ components:
         - body
 
   securitySchemes:
-    bearerAuth:            # arbitrary name for the security scheme
-      type: http
-      scheme: bearer
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
