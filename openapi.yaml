@@ -1,0 +1,123 @@
+openapi: 3.0.0
+info:
+  title: Fozzolog API
+  description: Simple blogging API
+  version: 0.1.9
+
+servers:
+  - url: '{protocol}://{environment}.fozzilinymoo.org/v1'
+    description: Main (production) server
+
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: https
+      environment:
+        enum:
+          - api     # Production
+          - api.dev # Development
+        default: api
+
+paths:
+  /login:
+    post:
+
+  /flog:
+    summary: Get all flog objects
+    get:
+      responses: 
+        '200':
+          description: OK
+
+  /flog/{id}:
+    get:
+      tags:
+        - Flogs
+      summary: Gets a flog by ID.
+      operationId: get_flog_by_id
+      parameters:
+        - name: id
+          in: path
+          description: Flog ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flog'
+      externalDocs:
+        description: Learn more about user operations provided by this API.
+        url: http://api.example.com/docs/user-operations/
+
+  /author:
+
+  /post:
+
+components:
+  schemas:
+    Flog:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      required:
+        - id
+        - name
+    Author:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        flog_id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        is_admin:
+          type: boolean
+        is_flog_admin:
+          type: boolean
+      required:
+        - id
+        - username
+        - password
+        - is_admin
+        - is_flog_admin
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        author_id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        body:
+          type: string
+      required:
+        - id
+        - author_id
+        - title
+        - body
+
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
