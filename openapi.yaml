@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Fozzolog API
   description: Simple blogging API
-  version: 0.1.9
+  version: 0.0.1
 
 servers:
   - url: '{protocol}://{environment}.fozzilinymoo.org/v1'
@@ -43,17 +43,23 @@ paths:
                 properties:
                   X-API-Key: 
                     type: string
-                
         '401':
           description: Incorrect username or password
 
-  /flog:
+  /flogs/:
     get:
       summary: Get all flog objects
       security: []
       responses: 
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfFlog'
+        '404':
+          description: Not found
+
     post:
       security: 
         - ApiKeyAuth: []
@@ -67,8 +73,10 @@ paths:
       responses:
         '201':
           description: Created
+        '401':
+          description: Invalid API key provided
 
-  /flog/{id}:
+  /flogs/{id}:
     get:
       tags:
         - Flogs
@@ -90,6 +98,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Flog'
+        '404':
+          description: Object not found
     put:
       summary: Update a flog object
       security: 
@@ -111,6 +121,10 @@ paths:
       responses:
         '200':
           description: Updated
+        '401':
+          description: Invalid API key provided
+        '404':
+          description: Object not found
     delete:
       summary: Delete a flog object
       security: 
@@ -124,10 +138,14 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
-          description: Deleted flog
+        '204':
+          description: The resource was deleted successfully
+        '401':
+          description: Invalid API key provided
+        '404':
+          description: Object not found
 
-  /author:
+  /authors/:
     get:
       summary: Get all author objects
       security: 
@@ -135,6 +153,14 @@ paths:
       responses: 
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfAuthor'
+        '401':
+          description: Invalid API key provided
+        '404':
+          description: Object not found
     post:
       summary: Add a new author object
       security: 
@@ -148,8 +174,10 @@ paths:
       responses:
         '201':
           description: Created
+        '401':
+          description: Invalid API key provided
 
-  /author/{id}:
+  /authors/{id}:
     get:
       tags:
         - Author
@@ -170,6 +198,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Author'
+        '404':
+          description: Object not found
     put:
       summary: Update an author object
       security: 
@@ -191,6 +221,10 @@ paths:
       responses:
         '200':
           description: Updated
+        '401':
+          description: Invalid API key provided
+        '404':
+          description: Object not found
     delete:
       summary: Delete an author object
       security: 
@@ -204,14 +238,56 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
-          description: Deleted author
-  /post:
+        '204':
+          description: The resource was deleted successfully
+        '401':
+          description: Invalid API key provided
+        '404':
+          description: Object not found
+
+  /authors/{id}/posts/:
     get:
-      summary: Get all post objects
+      summary: Get all post objects for an author
+      parameters:
+        - name: id
+          in: path
+          description: Author ID
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses: 
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfPost'
+        '404':
+          description: Object not found
+
+  /flogs/{id}/posts/:
+    get:
+      summary: Get all post objects for a flog
+      parameters:
+        - name: id
+          in: path
+          description: Flog ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses: 
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfPost'
+        '404':
+          description: Object not found
+
+  /posts/:
     post:
       summary: Add a new post object
       security: 
@@ -225,8 +301,10 @@ paths:
       responses:
         '201':
           description: Created
+        '401':
+          description: Invalid API key provided
 
-  /post/{id}:
+  /posts/{id}:
     get:
       tags:
         - Post
@@ -247,6 +325,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Post'
+        '404':
+          description: Object not found
     put:
       summary: Update a post object
       security: 
@@ -268,6 +348,10 @@ paths:
       responses:
         '200':
           description: Updated
+        '401':
+          description: Invalid API key provided
+        '404':
+          description: Object not found
     delete:
       summary: Delete a post object
       security: 
@@ -281,9 +365,12 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
-          description: Deleted author
-
+        '204':
+          description: The resource was deleted successfully
+        '401':
+          description: Invalid API key provided
+        '404':
+          description: Object not found
 
 components:
   schemas:
@@ -298,6 +385,10 @@ components:
       required:
         - id
         - name
+    ArrayOfFlog:
+      type: array
+      items:
+        $ref: '#/components/schemas/Flog'
     Author:
       type: object
       properties:
@@ -323,6 +414,10 @@ components:
         - password
         - is_admin
         - is_flog_admin
+    ArrayOfAuthor:
+      type: array
+      items:
+        $ref: '#/components/schemas/Author'
     Post:
       type: object
       properties:
@@ -341,6 +436,10 @@ components:
         - author_id
         - title
         - body
+    ArrayOfPost:
+      type: array
+      items:
+        $ref: '#/components/schemas/Post'
 
   securitySchemes:
     ApiKeyAuth:
