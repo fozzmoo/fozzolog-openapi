@@ -7,7 +7,7 @@ the backend:
 - authors
 - posts
 
-#Object relationships
+# Object relationships
 
 The object relationship diagram for this schema looks like this:
 
@@ -35,7 +35,7 @@ The object relationship diagram for this schema looks like this:
                              | body           |
                              +----------------+
 
-#The API
+# The API
 
 This is a fairly simple API with most API operations corresponding to CRUD 
 operations on the core data objects.
@@ -44,16 +44,16 @@ The exception is `/login` which handles initial validation and
 authentication of a user's credentials and returns an API key that may be
 used in subsequent requests for protected paths.
 
-##Routes/paths
+## Routes/paths
 
-###`/flogs/` 
+### `/flogs/` 
 
 | Method    | Description                               | Protected |
 | --------- | -----------                               | --------- |
 | GET       | Returns a list of all flog objects        | N         |
 | POST      | Creates a new flog objects                | Y         |
 
-###`/flogs/ID` 
+### `/flogs/ID` 
 
 | Method    | Description                               | Protected |
 | --------- | -----------                               | --------- |
@@ -61,14 +61,14 @@ used in subsequent requests for protected paths.
 | PUT       | Updates a single flog object              | Y         |
 | DELETE    | Updates a single flog object              | Y         |
 
-###`/authors/` 
+### `/authors/` 
 
 | Method    | Description                               | Protected |
 | --------- | -----------                               | --------- |
 | GET       | Returns a list of all author objects      | N         |
 | POST      | Creates a new author object               | Y         |
 
-###`/authors/ID` 
+### `/authors/ID` 
 
 | Method    | Description                               | Protected |
 | --------- | -----------                               | --------- |
@@ -76,25 +76,25 @@ used in subsequent requests for protected paths.
 | PUT       | Updates a single author object            | Y         |
 | DELETE    | Updates a single author object            | Y         |
 
-###`/flogs/ID/posts` 
+### `/flogs/ID/posts` 
 
 | Method    | Description                                       | Protected |
 | --------- | -----------                                       | --------- |
 | GET       | Returns a list of all post objects for a flog     | N         |
 
-###`/authors/ID/posts` 
+### `/authors/ID/posts` 
 
 | Method    | Description                                       | Protected |
 | --------- | -----------                                       | --------- |
 | GET       | Returns a list of all post objects for an author  | N         |
 
-###`/posts/` 
+### `/posts/` 
 
 | Method    | Description                               | Protected |
 | --------- | -----------                               | --------- |
 | POST      | Creates a new post object                 | Y         |
 
-###`/posts/ID` 
+### `/posts/ID` 
 
 | Method    | Description                               | Protected |
 | --------- | -----------                               | --------- |
